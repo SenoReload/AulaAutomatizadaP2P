@@ -1,10 +1,9 @@
 import ipfshttpclient
-from base64 import b64encode, b64decode
 # Objeto para un cliente que corre continuamente
-class ipfsPubsub:
+class ipfsPubSub:
 	"""Clase para el cliente de Publisher-Subscriber"""
-	def __init__(self):
-		self._client = ipfshttpclient.connect("/ip4/127.0.0.1/tcp/5001")
+	def __init__(self, conn = "/ip4/127.0.0.1/tcp/5001"):
+		self._client = ipfshttpclient.connect(conn)
 		self._pubsub = self._client.pubsub
 	def client(self):
 		return self._client
@@ -20,18 +19,25 @@ class ipfsPubsub:
 		return self._pubsub.ls(**kwargs)
 	def peers(self, topic = None, **kwargs):
 		return self._pubsub.peers(topic,**kwargs)
+	def testConn(self):
+		for item in self._client.id().items():
+			print(item)
 def main():
+	from base64 import b64encode, b64decode
 	# Ejemplos
 	# Instancia de clase
-	with ipfsPubsub().client() as client:
+	with ipfsPubSub().client() as client:
 		for item in client.id().items():
 			print(item)
 	# Instancia de cliente
 	with ipfshttpclient.connect("/ip4/127.0.0.1/tcp/5001") as client:
 		for item in client.id().items():
 			print(item)
+
 	# Instancia de PubSub
-	client = ipfsPubsub()
+	client = ipfsPubSub("/ip4/127.0.0.1/tcp/5001")
+	# prueba
+	client.testConn()
 	with client.sub("testing", True) as sub:
 		client.pub("testing","hola")
 		# Imprime diccionario de subcripciones
@@ -41,6 +47,6 @@ def main():
 			for val in msg.values():
 				if not isinstance(val, list):
 					print(b64decode(val))
-
+	# Prueba de método de prueba
 if __name__ == '__main__':
 	main()
