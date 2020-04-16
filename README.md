@@ -69,3 +69,5 @@ XrerTAgMBAAE=')
 ('ProtocolVersion', 'ipfs/0.1.0')
 
 ```
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
