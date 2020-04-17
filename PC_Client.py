@@ -13,13 +13,17 @@ Client = ipfsClient.ipfsPubSub(apiServer)
 
 while True:
 	with Client.sub("RFIDID", True) as A, Client.sub("RFIDName", True) as B:
-		for msg in A:
-			for val in msg.values():
+		for id in A:
+			for val in id.values():
 				if not isinstance(val, list):
-					print(b64decode(val))
+					idToDB = b64decode(val)
 			break
-		for msg in B:
-			for val in msg.values():
+		for name in B:
+			for val in name.values():
 				if not isinstance(val, list):
-					print(b64decode(val))
+					nameToDB = b64decode(val)
 			break
+	if id != None and name != None:
+        atte = dt.timestamp(dt.now())
+        db.insert({'ID': str(idToDB), 'Nombre': str(nameToDB), 'Fecha': str(atte)})
+        db.search(User.Nombre == str(nameToDB))
